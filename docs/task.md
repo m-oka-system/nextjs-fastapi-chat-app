@@ -4,23 +4,23 @@
 
 ### 1.1 基盤構築
 
-- [ ] **INFRA-001**: リソースグループの作成 (東日本リージョン)
-- [ ] **INFRA-002**: Virtual Network (VNet) の作成 (10.0.0.0/16, 東日本リージョン)
-- [ ] **INFRA-003**: AppServiceSubnet の作成 (10.0.1.0/24)
-- [ ] **INFRA-004**: PrivateEndpointSubnet の作成 (10.0.2.0/24)
-- [ ] **INFRA-005**: ApplicationGatewaySubnet の作成 (10.0.3.0/24)
-- [ ] **INFRA-006**: AppServiceSubnet NSG の作成と設定
-- [ ] **INFRA-007**: PrivateEndpointSubnet NSG の作成と設定
-- [ ] **INFRA-008**: ApplicationGatewaySubnet NSG の作成と設定
+- [x] **INFRA-001**: リソースグループの作成 (東日本リージョン)
+- [x] **INFRA-002**: Virtual Network (VNet) の作成 (10.0.0.0/16, 東日本リージョン)
+- [x] **INFRA-003**: AppServiceSubnet の作成 (10.0.1.0/24)
+- [x] **INFRA-004**: PrivateEndpointSubnet の作成 (10.0.2.0/24)
+- [x] **INFRA-005**: ApplicationGatewaySubnet の作成 (10.0.3.0/24)
+- [x] **INFRA-006**: AppServiceSubnet NSG の作成と設定
+- [x] **INFRA-007**: PrivateEndpointSubnet NSG の作成と設定
+- [x] **INFRA-008**: ApplicationGatewaySubnet NSG の作成と設定
 
 ### 1.2 Private DNS Zone
 
-- [ ] **INFRA-009**: privatelink.documents.azure.com の作成 (Cosmos DB 用)
-- [ ] **INFRA-010**: privatelink.vaultcore.azure.net の作成 (Key Vault 用)
-- [ ] **INFRA-011**: privatelink.azurecr.io の作成 (Container Registry 用, VNet 内アクセス用)
-- [ ] **INFRA-012**: privatelink.openai.azure.com の作成 (OpenAI 用)
-- [ ] **INFRA-013**: privatelink.azurewebsites.net の作成 (App Service 用)
-- [ ] **INFRA-014**: VNet と Private DNS Zone のリンク設定
+- [x] **INFRA-009**: privatelink.documents.azure.com の作成 (Cosmos DB 用)
+- [x] **INFRA-010**: privatelink.vaultcore.azure.net の作成 (Key Vault 用)
+- [x] **INFRA-011**: privatelink.azurecr.io の作成 (Container Registry 用, VNet 内アクセス用)
+- [x] **INFRA-012**: privatelink.openai.azure.com の作成 (OpenAI 用)
+- [x] **INFRA-013**: privatelink.azurewebsites.net の作成 (App Service 用)
+- [x] **INFRA-014**: VNet と Private DNS Zone のリンク設定
 
 ### 1.3 マネージド ID
 

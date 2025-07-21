@@ -96,3 +96,26 @@ resource "azurerm_subnet_network_security_group_association" "main" {
   subnet_id                 = azurerm_subnet.main[each.key].id
   network_security_group_id = azurerm_network_security_group.main[each.key].id
 }
+
+# INFRA-009-013: Private DNS Zoneの作成
+resource "azurerm_private_dns_zone" "main" {
+  for_each = var.private_dns_zones
+
+  name                = each.value
+  resource_group_name = azurerm_resource_group.main.name
+
+  tags = local.common_tags
+}
+
+# INFRA-014: VNetとPrivate DNS Zoneのリンク設定
+resource "azurerm_private_dns_zone_virtual_network_link" "main" {
+  for_each = var.private_dns_zones
+
+  name                  = "link-${each.key}-${var.project}-${var.environment}"
+  resource_group_name   = azurerm_resource_group.main.name
+  private_dns_zone_name = azurerm_private_dns_zone.main[each.key].name
+  virtual_network_id    = azurerm_virtual_network.main.id
+  registration_enabled  = false
+
+  tags = local.common_tags
+}

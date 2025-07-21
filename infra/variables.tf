@@ -242,3 +242,15 @@ variable "network_security_groups" {
     }
   }
 }
+
+variable "private_dns_zones" {
+  description = "Private DNS Zone の設定"
+  type        = map(string)
+  default = {
+    cosmos_db          = "privatelink.documents.azure.com"
+    key_vault          = "privatelink.vaultcore.azure.net"
+    container_registry = "privatelink.azurecr.io"
+    openai             = "privatelink.openai.azure.com"
+    app_service        = "privatelink.azurewebsites.net"
+  }
+}
