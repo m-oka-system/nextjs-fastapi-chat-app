@@ -254,3 +254,15 @@ variable "private_dns_zones" {
     app_service        = "privatelink.azurewebsites.net"
   }
 }
+
+variable "user_assigned_identities" {
+  description = "ユーザー割り当てマネージドIDの設定"
+  type = map(object({
+    # 追加の設定項目があれば、ここに定義
+  }))
+  default = {
+    appservice = {
+      # App Service用のマネージドID
+    }
+  }
+}

@@ -119,3 +119,14 @@ resource "azurerm_private_dns_zone_virtual_network_link" "main" {
 
   tags = local.common_tags
 }
+
+# INFRA-015: ユーザー割り当てマネージドIDの作成
+resource "azurerm_user_assigned_identity" "main" {
+  for_each = var.user_assigned_identities
+
+  name                = "id-${each.key}-${var.project}-${var.environment}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+
+  tags = local.common_tags
+}
