@@ -4,7 +4,7 @@
   - terraform validate
   - terraform fmt -recursive
   - terraform plan
-  - terraform init (Module 追加 / Backend 更新 / バージョン変更時)
+  - terraform init -backend=false (Module 追加 / Backend 更新 / バージョン変更時)
 
 ## 命名規則
 
