@@ -119,3 +119,30 @@ resource "azurerm_private_dns_zone_virtual_network_link" "main" {
 
   tags = local.common_tags
 }
+
+# INFRA-015: ユーザー割り当てマネージドIDの作成
+# このリソースは、Azureリソースへのアクセス制御やセキュリティ設定のために使用される
+# ユーザー割り当てマネージドIDを作成します。
+# 
+# 利用例:
+# - Azure Key Vault へのアクセス許可
+# - Azure Cosmos DB へのロール割り当て  
+# - Azure Container Registry へのアクセス制御
+# - Azure OpenAI Service への認証
+#
+# 出力される属性:
+# - id: リソースID（全体）
+# - principal_id: ロール割り当てで使用するプリンシパルID
+# - client_id: アプリケーション認証で使用するクライアントID
+# - tenant_id: テナントID
+#
+# 参考:
+# - Azure公式ドキュメント: https://learn.microsoft.com/ja-jp/azure/active-directory/managed-identities-azure-resources/overview
+# - Terraform AzureRM Provider: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity
+resource "azurerm_user_assigned_identity" "main" {
+  name                = "${var.user_assigned_identity.name}-${var.project}-${var.environment}"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+
+  tags = local.common_tags
+}
