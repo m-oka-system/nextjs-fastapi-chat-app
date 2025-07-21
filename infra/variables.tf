@@ -255,12 +255,14 @@ variable "private_dns_zones" {
   }
 }
 
-variable "user_assigned_identity" {
+variable "user_assigned_identities" {
   description = "ユーザー割り当てマネージドIDの設定"
-  type = object({
-    name = string
-  })
+  type = map(object({
+    # 追加の設定項目があれば、ここに定義
+  }))
   default = {
-    name = "id-main"
+    appservice = {
+      # App Service用のマネージドID
+    }
   }
 }
