@@ -4,7 +4,7 @@
 
 ### 1.1 全体構成図
 
-- **デプロイリージョン**: 東日本 (Japan East) ※OpenAI Service除く
+- **デプロイリージョン**: 東日本 (Japan East) ※OpenAI Service 除く
 - **ホスティング**: Azure App Service (Linux Container)
 - **コンテナレジストリ**: Azure Container Registry
 - **データベース**: Azure Cosmos DB (Core SQL API)
@@ -117,7 +117,7 @@ flowchart TB
 | ------ | ---------------------------- | -------------- | ------------ | ----------- | ---------- | ---------- | ---------- |
 | 100 | AllowPrivateEndpointOutbound | VirtualNetwork | _ | 10.0.2.0/24 | 443 | TCP | 許可 |
 | 110 | AllowInternetOutbound | VirtualNetwork | _ | Internet | 443 | TCP | 許可 |
-| 4096 | DenyAllOutbound | _ | _ | _ | _ | \* | 拒否 |
+| 4096 | DenyAllOutbound | \* | \* | \* | \* | \* | 拒否 |
 
 ##### PrivateEndpointSubnet NSG
 
@@ -126,11 +126,12 @@ flowchart TB
 |--------|------|--------|--------------|------|------------|------------|------------|
 | 100 | AllowAppServiceSubnetInbound | 10.0.1.0/24 | _ | VirtualNetwork | 443 | TCP | 許可 |
 | 110 | AllowApplicationGatewayInbound | 10.0.3.0/24 | _ | VirtualNetwork | 443 | TCP | 許可 |
+| 4096 | DenyAllInbound | \* | \* | \* | \* | \* | 拒否 |
 
 **送信セキュリティ規則:**
 | 優先度 | 名前 | ソース | ソースポート | 宛先 | 宛先ポート | プロトコル | アクション |
 |--------|------|--------|--------------|------|------------|------------|------------|
-| 4096 | DenyAllOutbound | _ | _ | _ | _ | \* | 拒否 |
+| 4096 | DenyAllOutbound | \* | \* | \* | \* | \* | 拒否 |
 
 ##### ApplicationGatewaySubnet NSG
 
@@ -138,13 +139,18 @@ flowchart TB
 | 優先度 | 名前 | ソース | ソースポート | 宛先 | 宛先ポート | プロトコル | アクション |
 |--------|------|--------|--------------|------|------------|------------|------------|
 | 100 | AllowCorpNetInbound | 社内ネットワーク IP 範囲 | _ | VirtualNetwork | 443 | TCP | 許可 |
-| 200 | AllowGatewayManagerInbound | GatewayManager | _ | \* | 65200-65535 | TCP | 許可 |
+| 4095 | AllowAzureLoadBalancer | AzureLoadBalancer | _ | \* | \* | \* | 許可 |
+| 4096 | DenyAllInbound | \* | \* | \* | \* | \* | 拒否 |
 
 **送信セキュリティ規則:**
 | 優先度 | 名前 | ソース | ソースポート | 宛先 | 宛先ポート | プロトコル | アクション |
 |--------|------|--------|--------------|------|------------|------------|------------|
-| 100 | AllowPrivateEndpointOutbound | VirtualNetwork | _ | 10.0.2.0/24 | 443 | TCP | 許可 |
-| 4096 | DenyAllOutbound | _ | _ | _ | _ | _ | 拒否 |
+| 100 | AllowPrivateEndpointOutbound | VirtualNetwork | \_ | 10.0.2.0/24 | 443 | TCP | 許可 |
+| 4096 | DenyAllOutbound | \* | \* | \* | \* | \* | 拒否 |
+
+**注意:** プライベート Application Gateway では GatewayManager のインバウンド規則は不要です。必要な規則は正常性プローブのための AzureLoadBalancer からの受信許可のみです。
+
+https://learn.microsoft.com/ja-jp/azure/application-gateway/application-gateway-private-deployment?tabs=portal#network-security-group-control
 
 #### Private Endpoint
 
@@ -396,18 +402,19 @@ infra/
 
 ### 4.2 主要リソースの SKU 選定
 
-| リソース            | SKU                    | 理由                                    |
-| ------------------- | ---------------------- | --------------------------------------- |
-| App Service Plan    | B1 (Basic)             | 最小コスト、開発環境向け                |
-| Cosmos DB           | Serverless             | 使用量ベース課金、低コスト              |
-| Application Gateway | Basic (v2, Preview)    | ゾーン冗長対応、WAF不要、基本機能で十分 |
-| Container Registry  | Basic                  | 最小ストレージで十分、CI/CD用にパブリックアクセス許可 |
-| Key Vault           | Standard               | ゾーン冗長対応、Premium機能不要         |
-| OpenAI              | Standard               | 通常利用には十分                        |
+| リソース            | SKU                 | 理由                                                   |
+| ------------------- | ------------------- | ------------------------------------------------------ |
+| App Service Plan    | B1 (Basic)          | 最小コスト、開発環境向け                               |
+| Cosmos DB           | Serverless          | 使用量ベース課金、低コスト                             |
+| Application Gateway | Basic (v2, Preview) | ゾーン冗長対応、WAF 不要、基本機能で十分               |
+| Container Registry  | Basic               | 最小ストレージで十分、CI/CD 用にパブリックアクセス許可 |
+| Key Vault           | Standard            | ゾーン冗長対応、Premium 機能不要                       |
+| OpenAI              | Standard            | 通常利用には十分                                       |
 
 ### 4.3 可用性とバックアップ設計
 
 #### 可用性ゾーン対応
+
 - **デプロイリージョン**: 東日本 (Japan East) - 可用性ゾーン対応リージョン
 - **Application Gateway**: v2 Basic SKU（プレビュー）でゾーン冗長対応
 - **Key Vault**: Standard SKU で既定のゾーン冗長対応
@@ -415,11 +422,13 @@ infra/
 - **その他のリソース**: 単一ゾーン構成（コスト最適化）
 
 #### 将来的な拡張
+
 - **App Service**: Premium プランでゾーン冗長化
 - **Cosmos DB**: ゾーン冗長レプリケーション
 - **Container Registry**: Premium SKU でゾーン冗長化
 
 #### バックアップ・DR 設計
+
 - **Cosmos DB**: 自動バックアップ（4 時間ごと）
 - **Container Registry**: イメージのバージョニング
 - **可用性目標**: 99%以上（計画メンテナンス除く）
