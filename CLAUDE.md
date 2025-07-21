@@ -37,8 +37,12 @@
 - `npm run build`: プロジェクトのビルド実行
 - `pytest tests/`: テストスイート実行
 - `black .`: コードフォーマット適用
+- `terraform init`: Terraform の初期化
+- `terraform plan`: Terraform の実行計画確認
 - `terraform validate`: Terraform の構文チェック
 - `terraform fmt -recursive`: Terraform のフォーマット適用
+- `set3`: サブスクリプションを選択 (`az account set -s <subscription_id>` を実行。 ~/.bashrc に alias で定義)
+- `acls`: 現在選択しているサブスクリプションを確認 (`az account list -o table | grep True` を実行。~/.bashrc に alias で定義)
 
 ## コードスタイル
 
@@ -54,10 +58,4 @@
 ## Terraform コーディングルール
 
 - @.github/instructions/generate-modern-terraform-code-for-azure.instructions.md
-- @.github/instructions/azure.md
-
-ベストプラクティスや不明点に関する調査は以下のルールに従ってください。
-
-- Azure のベストプラクティスは microsoft.docs mcp を使用して調査してください。
-- Terraform のベストプラクティスは terraform / microsoft.docs mcp を使用して調査してください。
-- 調査結果を報告する時は、根拠となる URL を合わせて提示してください。
+- @.github/instructions/infra.md
