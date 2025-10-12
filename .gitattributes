@@ -1,5 +1,4 @@
 .claude/ export-ignore
-.github/** export-ignore
-.github/workflows/*.y?ml -export-ignore
+.github/**/*.md export-ignore
 .vscode/ export-ignore
 docs/ export-ignore
