@@ -1,4 +1,8 @@
 .claude/ export-ignore
+.github/instructions/ export-ignore
+.github/ISSUE_TEMPLATE/ export-ignore
+.github/prompts/ export-ignore
+.github/chatmodes/ export-ignore
 .github/**/*.md export-ignore
 .vscode/ export-ignore
 docs/ export-ignore
